@@ -1,4 +1,5 @@
 import db from "../db.js";
+import bcrypt from 'bcryptjs'
 import { errorHandler } from "../utils/error.js";
 
 export const getUsers = (req, res, next) => {
@@ -43,25 +44,24 @@ export const createUser = (req, res, next) => {
                 } else if (data.length > 0) {
                     next(errorHandler(400, "Phone already exist!!", err));
                 } else {
-                    const sql =
-                        "Insert into user(f_name,l_name,address,email,phone,password,gender,created_at) Values(?,?,?,?,?,?,?,?)";
-                    const values = [
-                        f_name,
-                        l_name,
-                        address,
-                        email,
-                        phone,
-                        password,
-                        gender,
-                        created_at,
-                    ];
-                    db.query(sql, values, (err, data) => {
+                    bcrypt.hash(password, 10, (err, hash) => {
                         if (err) {
-                            next(errorHandler(500, err));
+                            res.send(errorHandler(400, "Error during Hasing password", err))
                         } else {
-                            res.send(data);
+                            const sql =
+                                "Insert into user(f_name,l_name,address,email,phone,password,gender,created_at) Values(?,?,?,?,?,?,?,?)";
+                            const values = [f_name, l_name, address, email, phone, hash, gender, created_at];
+                            db.query(sql, values, (err, data) => {
+                                if (err) {
+                                    next(errorHandler(500, err));
+                                } else {
+                                    res.send(data);
+                                }
+                            });
+
                         }
                     });
+
                 }
             });
         }
@@ -93,7 +93,7 @@ export const updateUser = (req, res, next) => {
                             const sql = "select * from user where phone=?";
                             db.query(sql, [phone], (err, result) => {
                                 if (err) {
-                                    next(errorHandler(400,"Something went wrong", err));
+                                    next(errorHandler(400, "Something went wrong", err));
                                 } else {
                                     if (
                                         result.length > 0 &&
@@ -102,7 +102,7 @@ export const updateUser = (req, res, next) => {
                                     ) {
                                         next(errorHandler(400, "Phone already exists!"));
                                     } else {
-                                        
+
                                         const updatedData = {
                                             f_name: f_name || existingUserData.f_name,
                                             l_name: l_name || existingUserData.l_name,
@@ -174,6 +174,79 @@ export const deleteUser = (req, res, next) => {
         }
     });
 };
+
+
+
+export const changePassword = (req, res, next) => {
+    const { currentPassword, newPassword } = req.body;
+    const id = parseInt(req.params.id);
+    const sql = 'SELECT * FROM user WHERE user_id = ?';
+
+    db.query(sql, id, (err, data) => {
+        if (err) {
+            return next(errorHandler(500, "Server error", err));
+        }
+
+        if (data.length === 0) {
+            return next(errorHandler(404, "User not found"));
+        }
+
+        // Compare the current password
+        bcrypt.compare(currentPassword, data[0].password, (err, isMatch) => {
+            if (err) {
+                return next(errorHandler(500, "Server error", err));
+            }
+
+            if (!isMatch) {
+                return next(errorHandler(400, "Incorrect current password"));
+            }
+
+            // Check if the new password is the same as the current password
+            bcrypt.compare(newPassword, data[0].password, (err, isSame) => {
+                if (err) {
+                    return next(errorHandler(500, "Server error", err));
+                }
+
+                if (isSame) {
+                    return next(errorHandler(400, "Please enter a different password"));
+                }
+
+                // Hash the new password
+                bcrypt.hash(newPassword, 10, (err, hash) => {
+                    if (err) {
+                        return next(errorHandler(500, "Server error", err));
+                    }
+
+                    const updateSql = 'UPDATE user SET password = ? WHERE user_id = ?';
+                    db.query(updateSql, [hash, id], (err, result) => {
+                        if (err) {
+                            return next(errorHandler(500, "Server error", err));
+                        }
+
+                        res.send({ success: 1, message: "Password changed successfully" });
+                    });
+                });
+            });
+        });
+    });
+};
+
+export const changeProfile = (req, res, next) => {
+    const profile = req.file.filename;
+    const id = parseInt(req.params.id);
+    
+   
+    const sql = "UPDATE user SET profile = ? WHERE user_id = ?";
+
+    db.query(sql, [profile, id], (err, data) => {
+        if (err) {
+            return next(errorHandler(500, "Something went wrong, please try later"));
+        }
+        res.send({ success: 1, message: "Profile updated successfully", data });
+    });
+};
+
+
 
 
 

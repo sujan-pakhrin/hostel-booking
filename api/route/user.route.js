@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, deleteUser, getUser, getUsers, updateUser } from '../controller/user.controller.js';
+import { changePassword, changeProfile, createUser, deleteUser, getUser, getUsers, updateUser } from '../controller/user.controller.js';
 import upload from '../middleware/multerconfig.js';
 const router = express.Router()
 
@@ -8,9 +8,11 @@ const router = express.Router()
 
 router.get('/user', getUsers)
 router.get('/user/:id', getUser)
-router.post('/user', upload.single("profile"),createUser)
-router.put('/user/:id', upload.single("profile"),updateUser)
-router.delete('/user/:id', upload.single("profile"),deleteUser)
+router.post('/user', createUser)
+router.put('/user/:id', updateUser)
+router.delete('/user/:id', deleteUser)
+router.put('/user/password/:id',changePassword)
+router.put('/user/profile/:id', upload.single("profile"),changeProfile)
 
 
 export default router;
