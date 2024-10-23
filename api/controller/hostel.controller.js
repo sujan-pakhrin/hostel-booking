@@ -6,18 +6,18 @@ const validateEmail = (email) => {
     return emailRegex.test(email);
 };
 const validateCoordinates = (latitude, longitude) => {
-      const latNum = parseFloat(latitude);
-      const lonNum = parseFloat(longitude);
-  
-      return (
-          !isNaN(latNum) &&
-          !isNaN(lonNum) && // Corrected this line
-          latNum >= -90 && 
-          latNum <= 90 && 
-          lonNum >= -180 && 
-          lonNum <= 180
-      );
-  };
+    const latNum = parseFloat(latitude);
+    const lonNum = parseFloat(longitude);
+
+    return (
+        !isNaN(latNum) &&
+        !isNaN(lonNum) && // Corrected this line
+        latNum >= -90 &&
+        latNum <= 90 &&
+        lonNum >= -180 &&
+        lonNum <= 180
+    );
+};
 export const addHostel = (req, res, next) => {
     const {
         name,
@@ -174,14 +174,20 @@ export const updateHostelById = (req, res, next) => {
 
 export const deleteHostelById = (req, res, next) => {
     const id = parseInt(req.params.id);
-    const sql = "DELETE FROM hostel WHERE hostel_id=?";
+    const sql = "DELETE FROM image WHERE hostel_id=?";
     db.query(sql, id, (err, data) => {
         if (err) {
             return next(errorHandler(400, err));
         }
-        if (data.affectedRows === 0) {
-            return next(errorHandler(400, "No hostel found with this ID"));
-        }
-        res.status(200).send({ message: "Hostel deleted successfully" });
+        const sql = "DELETE FROM hostel WHERE hostel_id=?";
+        db.query(sql, id, (err, result) => {
+            if (err) {
+                return next(errorHandler(400, err));
+            }
+            if (result.affectedRows === 0) {
+                return next(errorHandler(400, "No hostel found with this ID"));
+            }
+            res.status(200).send({ message: "Hostel deleted successfully" });
+        });
     });
 };

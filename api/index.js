@@ -4,6 +4,7 @@ import userRouter from "./route/user.route.js";
 import authRouter from "./route/auth.route.js";
 import hostelRouter from "./route/hostel.route.js";
 import roomRouter from "./route/room.route.js";
+import bookingRouter from "./route/book.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 const port = 8888;
@@ -22,6 +23,7 @@ app.use("/api", userRouter);
 app.use("/api", authRouter);
 app.use("/api", hostelRouter);
 app.use("/api", roomRouter);
+app.use("/api", bookingRouter);
 
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500;
