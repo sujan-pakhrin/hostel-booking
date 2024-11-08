@@ -1,19 +1,41 @@
 import db from "../db.js";
 import { errorHandler } from "../utils/error.js";
 
-// export const addBook =(req,res,next) =>{
-//       const {hostel_id,room_id,user_id,total_guest,check_in,check_out,total_amount}=req.body;
-//       const created_at=new Date()
-//       const sql = "INSERT INTO booking SET hostel_id=?, room_id=?, user_id=?, total_guest=?, check_in=?, check_out=?,total_amount=?,created_at=?";
-//       const values = [hostel_id,room_id,user_id,total_guest,check_in,check_out,total_amount,created_at];
-//       db.query(sql, values, (err, result) => {
-//             if (err) {
-//                 return next(errorHandler(500, err));
-//             } else {
-//                 res.status(201).json({ message: "Booking added successfully" });
-//             }
-//       })
-// }
+export const getBookings = (req, res, next) =>{
+    const sql = "SELECT * FROM booking";
+    db.query(sql, (err, data) => {
+        if (err) {
+            next(errorHandler(500, err));
+        } else {
+            res.send(data);
+        }
+    });
+}
+export const getSingleBooking = (req, res, next) =>{
+    const sql = "SELECT * FROM booking WHERE booking_id=?"
+    const id=parseInt(req.params.id)
+    db.query(sql, id, (err, data) => {
+        if(err){
+            return next(errorHandler(400, err));
+        }
+        if(data.length<=0){
+            return next(errorHandler(400, "Booking not found!!"));
+        }
+        res.send(data[0]);
+    })
+}
+export const getBookingById = (req, res, next) =>{
+    const sql = "SELECT * FROM booking WHERE user_id=?";
+    const id = parseInt(req.params.user_id);
+    db.query(sql, [id], (err, data) => {
+        if (err) {
+            return next(errorHandler(500, err));
+        }
+        
+        res.send(data);
+    });
+}
+
 export const addBook = (req, res, next) => {
     const {
         hostel_id,
@@ -185,3 +207,17 @@ export const updateBooking = (req, res, next) => {
         });
     });
 };
+
+export const deleteBooking=(req,res,next)=>{
+    const id = req.params.id;
+    const sql = "DELETE FROM booking WHERE booking_id=?";
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            return next(errorHandler(500, err));
+        }
+        if (result.affectedRows === 0) {
+            return next(errorHandler(400, "No booking found with this ID"));
+        }
+        res.status(200).json({ message: "Booking deleted successfully" });
+    })
+}
