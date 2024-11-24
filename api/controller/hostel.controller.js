@@ -113,9 +113,43 @@ export const addHostel = (req, res, next) => {
     });
 };
 
-export const getHostels = (req, res, next) => {};
+export const getHostels = (req, res, next) => {
+    const sql = `
+    SELECT h.*, 
+           JSON_ARRAYAGG(i.path) AS images
+    FROM hostel h
+    JOIN image i ON h.hostel_id = i.hostel_id
+    GROUP BY h.hostel_id;
+`;
 
-export const getHostelById = (req, res, next) => {};
+    db.query(sql, (err, data) => {
+        if (err) {
+            return next(errorHandler(400, err));
+        } else {
+            res.send(data);
+        }
+    });
+};
+
+export const getHostelById = (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const sql = `
+    SELECT h.*, 
+           JSON_ARRAYAGG(i.path) AS images
+    FROM hostel h
+    JOIN image i ON h.hostel_id = i.hostel_id
+    where h.hostel_id=?
+    GROUP BY h.hostel_id    ;
+`;
+
+    db.query(sql, id, (err, data) => {
+        if (err) {
+            return next(errorHandler(400, err));
+        } else {
+            res.send(data);
+        }
+    });
+};
 
 export const updateHostelById = (req, res, next) => {
     const {
@@ -190,4 +224,4 @@ export const deleteHostelById = (req, res, next) => {
             res.status(200).send({ message: "Hostel deleted successfully" });
         });
     });
-};
+}; 

@@ -1,40 +1,109 @@
 import db from "../db.js";
 import { errorHandler } from "../utils/error.js";
 
-export const getBookings = (req, res, next) =>{
-    const sql = "SELECT * FROM booking";
+export const getBookings = (req, res, next) => {
+    const sql = `
+        SELECT
+            b.booking_id,
+            b.check_out,
+            b.check_in,
+            b.total_guest,
+            b.total_amount,
+            h.hostel_id,
+            h.name As hostel_name, 
+            r.room_id,
+            r.room_number,  
+            u.user_id,
+            u.f_name,   
+            u.l_name,   
+            u.email       
+        FROM
+            booking b
+        JOIN
+            hostel h ON b.hostel_id = h.hostel_id
+        JOIN
+            room r ON b.room_id = r.room_id
+        JOIN
+            user u ON b.user_id = u.user_id
+        ;
+    `;
     db.query(sql, (err, data) => {
         if (err) {
-            next(errorHandler(500, err));
-        } else {
-            res.send(data);
+            return next(errorHandler(500, err));
         }
+        res.json(data);
     });
-}
-export const getSingleBooking = (req, res, next) =>{
-    const sql = "SELECT * FROM booking WHERE booking_id=?"
-    const id=parseInt(req.params.id)
+};
+
+export const getSingleBooking = (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const sql = `
+        SELECT
+            b.booking_id,
+            b.check_out,
+            b.check_in,
+            b.total_guest,
+            b.total_amount,
+            h.hostel_id,
+            h.name As hostel_name, 
+            r.room_id,
+            r.room_number,  
+            u.user_id,
+            u.f_name,   
+            u.l_name,   
+            u.email       
+        FROM
+            booking b
+        JOIN
+            hostel h ON b.hostel_id = h.hostel_id
+        JOIN
+            room r ON b.room_id = r.room_id
+        JOIN
+            user u ON b.user_id = u.user_id
+        WHERE b.booking_id =?
+        ;
+    `;
     db.query(sql, id, (err, data) => {
-        if(err){
+        if (err) {
             return next(errorHandler(400, err));
         }
-        if(data.length<=0){
-            return next(errorHandler(400, "Booking not found!!"));
-        }
         res.send(data[0]);
-    })
-}
-export const getBookingById = (req, res, next) =>{
-    const sql = "SELECT * FROM booking WHERE user_id=?";
+    });
+};
+export const getBookingById = (req, res, next) => {
+    const sql = `
+        SELECT
+            b.booking_id,
+            b.check_out,
+            b.check_in,
+            b.total_guest,
+            b.total_amount,
+            h.hostel_id,
+            h.name As hostel_name, 
+            r.room_id,
+            r.room_number,  
+            u.user_id,
+            u.f_name,   
+            u.l_name,   
+            u.email       
+        FROM
+            booking b
+        JOIN
+            hostel h ON b.hostel_id = h.hostel_id
+        JOIN
+            room r ON b.room_id = r.room_id
+        JOIN
+            user u ON b.user_id = u.user_id
+        WHERE b.user_id =?;
+    `;
     const id = parseInt(req.params.user_id);
     db.query(sql, [id], (err, data) => {
         if (err) {
             return next(errorHandler(500, err));
         }
-        
         res.send(data);
     });
-}
+};
 
 export const addBook = (req, res, next) => {
     const {
@@ -200,15 +269,19 @@ export const updateBooking = (req, res, next) => {
                     return next(errorHandler(400, err));
                 }
                 if (result.affectedRows === 0) {
-                    return next(errorHandler(400, "No booking found with this ID"));
+                    return next(
+                        errorHandler(400, "No booking found with this ID")
+                    );
                 }
-                res.status(200).json({ message: "Booking updated successfully" });
-            })
+                res.status(200).json({
+                    message: "Booking updated successfully",
+                });
+            });
         });
     });
 };
 
-export const deleteBooking=(req,res,next)=>{
+export const deleteBooking = (req, res, next) => {
     const id = req.params.id;
     const sql = "DELETE FROM booking WHERE booking_id=?";
     db.query(sql, [id], (err, result) => {
@@ -219,5 +292,5 @@ export const deleteBooking=(req,res,next)=>{
             return next(errorHandler(400, "No booking found with this ID"));
         }
         res.status(200).json({ message: "Booking deleted successfully" });
-    })
-}
+    });
+};

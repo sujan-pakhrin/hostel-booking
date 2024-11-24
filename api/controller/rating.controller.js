@@ -1,6 +1,26 @@
 import db from "../db.js";
 import { errorHandler } from "../utils/error.js";
 
+export const getReviewRatingByHostelId = (req, res, next) => {
+    const { hostel_id } = req.body;
+    const sql = `SELECT r.*,
+                u.f_name,
+                u.l_name,
+                u.email,
+                u.phone,
+                u.profile
+                FROM rating r
+                JOIN user u ON r.user_id = u.user_id
+                WHERE r.hostel_id = ?`;
+
+    db.query(sql, [hostel_id], (err, results) => {
+        if (err) {
+            return next(errorHandler(500, err));
+        }
+        res.status(200).json(results);
+    });
+};
+
 export const createReviewRating = (req, res, next) => {
     const { user_id, hostel_id, room_id, rating, review } = req.body;
     const sql =
@@ -74,15 +94,15 @@ export const updateReviewRating = (req, res, next) => {
 };
 
 export const deleteReviewRating = (req, res, next) => {
-      const id = parseInt(req.params.id);
-      const sql = "delete from rating where rating_id=?";
-      db.query(sql, id, (err, result) => {
-            if (err) {
-                  return next(errorHandler(400, err))
-            }
-            if (result.affectedRows === 0) {
-                  return next(errorHandler(400, "No review found with this ID"));
-            }
-            res.status(200).json({ message: "Review deleted successfully" });
-      });
-}
+    const id = parseInt(req.params.id);
+    const sql = "delete from rating where rating_id=?";
+    db.query(sql, id, (err, result) => {
+        if (err) {
+            return next(errorHandler(400, err));
+        }
+        if (result.affectedRows === 0) {
+            return next(errorHandler(400, "No review found with this ID"));
+        }
+        res.status(200).json({ message: "Review deleted successfully" });
+    });
+};
