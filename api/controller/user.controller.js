@@ -9,8 +9,10 @@ export const getUsers = (req, res, next) => {
         if (err) {
             next(errorHandler(500, err));
         } else {
-            res.send(data);
-            // console.log(data)
+            const separatedData = data.map(
+                ({ password, isAdmin, ...rest }) => rest
+            );
+            res.send(separatedData);
         }
     });
 };
@@ -18,12 +20,20 @@ export const getUser = (req, res, next) => {
     const id = parseInt(req.params.id);
     console.log(id);
     const sql = "select * from user where user_id=?";
+    
     db.query(sql, id, (err, data) => {
         if (err) {
-            next(errorHandler(400, err));
-        } else res.send(data);
+            return next(errorHandler(400, err));  
+        }
+
+        if (Array.isArray(data) && data.length > 0) {
+            const { password, isAdmin, ...rest } = data[0];
+            return res.send(rest); 
+        }
+        return res.status(404).send({ message: "User not found" });
     });
 };
+
 
 export const createUser = (req, res, next) => {
     // const profile = req.file.filename;
@@ -117,6 +127,50 @@ export const createUser = (req, res, next) => {
                     });
                 }
             });
+        }
+    });
+};
+
+export const resendOTP = (req, res, next) => {
+    const { email } = req.body;
+    const generateOTP = () => Math.floor(1000 + Math.random() * 9000);
+    const otp = generateOTP();
+    const sql = "select * from user where email=?";
+    db.query(sql, [email], (err, data) => {
+        if (err) {
+            next(errorHandler(400, err));
+        } else if (data.length <= 0) {
+            next(errorHandler(400, "User not found!!"));
+        } else {
+            const msg = `<div> <h1>Hi, ${email},This is your OTP: <span style="color:blue">${otp}</span> Please verify it on <a href="http://localhost:5173">AppName</a>.</h1>
+            </div>`;
+
+            sendMail({
+                receiver: email,
+                subject: "Mail Verification",
+                text: "msg",
+                html: msg,
+            })
+                .then((messageId) => {
+                    console.log(
+                        "Email sent successfully with Message ID:",
+                        messageId
+                    );
+                    const sql = "UPDATE user SET otp=? WHERE email=?";
+                    db.query(sql, [otp, email], (err, data) => {
+                        if (err) {
+                            res.status(500).send(err);
+                        } else {
+                            res.status(200).send({
+                                success: true,
+                                message: "Otp send successfully",
+                            });
+                        }
+                    });
+                })
+                .catch((err) => {
+                    res.status(500).send(err);
+                });
         }
     });
 };

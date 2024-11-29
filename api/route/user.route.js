@@ -8,6 +8,7 @@ import {
   forgetPassword,
   getUser,
   getUsers,
+  resendOTP,
   updateUser,
   verifyForgetOtp,
   verifyOtp,
@@ -18,6 +19,7 @@ const router = express.Router();
 router.get("/user", getUsers);
 router.get("/user/:id", getUser);
 router.post("/user", createUser);
+router.post("/user/resend-otp", resendOTP);
 router.post("/user/verify-otp", verifyOtp);
 router.post("/user/forget-password", forgetPassword);
 router.post("/user/verify-forget-otp", verifyForgetOtp);

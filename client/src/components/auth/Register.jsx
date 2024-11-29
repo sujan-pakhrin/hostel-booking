@@ -8,10 +8,11 @@ const Register = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        address: "",
+        address: "", 
         phone: "",
-        gender: "male",
+        gender: "",
     });
+    console.log(formData)
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +34,7 @@ const Register = () => {
             return;
         }
 
-        alert(`Registration successful! Email: ${formData.email}`);
+        alert(`Registration successful! Email: ${formData}`);
     };
 
     const handleChange = (e) => {
@@ -212,9 +213,6 @@ const Register = () => {
                     <div className="flex gap-4 items-center">
                         <label className="text-sm text-gray-600">Gender:</label>
                         <div className="flex gap-3 items-center">
-                            <label htmlFor="male" className="text-sm text-gray-600">
-                                Male
-                            </label>
                             <input
                                 type="radio"
                                 name="gender"
@@ -224,11 +222,11 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-radio"
                             />
+                            <label htmlFor="male" className="text-sm text-gray-600">
+                                Male
+                            </label>
                         </div>
                         <div className="flex gap-3 items-center">
-                            <label htmlFor="female" className="text-sm text-gray-600">
-                                Female
-                            </label>
                             <input
                                 type="radio"
                                 name="gender"
@@ -238,11 +236,11 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-radio"
                             />
+                            <label htmlFor="female" className="text-sm text-gray-600">
+                                Female
+                            </label>
                         </div>
                         <div className="flex gap-3 items-center">
-                            <label htmlFor="other" className="text-sm text-gray-600">
-                                Other
-                            </label>
                             <input
                                 type="radio"
                                 name="gender"
@@ -252,6 +250,9 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-radio"
                             />
+                            <label htmlFor="other" className="text-sm text-gray-600">
+                                Other
+                            </label>
                         </div>
                     </div>
 
@@ -284,3 +285,7 @@ const Register = () => {
 };
 
 export default Register;
+
+
+
+

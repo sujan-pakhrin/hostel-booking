@@ -1,6 +1,40 @@
 import db from "../db.js";
 import { errorHandler } from "../utils/error.js";
 
+export const getRoomsByHostelId = (req, res, next) => {
+    const { hostel_id } = req.body;
+    const sql = `SELECT r.*,
+                JSON_ARRAYAGG(i.path) as images
+                FROM 
+                    room r
+                JOIN 
+                    image i 
+                ON
+                    r.room_id=i.room_id 
+                    WHERE r.hostel_id=?
+                    GROUP BY r.room_id;`;
+    db.query(sql, [hostel_id], (err, data) => {
+        if (err) {
+            next(errorHandler(500, err));
+        } else {
+            res.json(data);
+        }
+    });
+};
+export const getRoom = (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const sql = `SELECT r.*,
+                JSON_ARRAYAGG(i.path) as images
+     FROM room r
+     JOIN image i ON r.room_id = i.room_id WHERE r.room_id=?`;
+    db.query(sql, [id], (err, data) => {
+        if (err) {
+            next(errorHandler(500, err));
+        } else {
+            res.json(data);
+        }
+    });
+};
 export const addRoom = (req, res, next) => {
     const { hostel_id, room_number, capacity, total_bed, bathroom } = req.body;
     const sql = "select * from room where room_number=?";
