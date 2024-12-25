@@ -5,3 +5,15 @@
 *{
   font-family: "Host Grotesk", sans-serif;
 }
+
+/* Hide the spin buttons in WebKit browsers (Chrome, Safari) */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide the spin buttons in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}

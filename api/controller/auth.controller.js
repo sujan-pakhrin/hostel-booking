@@ -21,10 +21,8 @@ export const Login = (req, res, next) => {
             }
 
             if (data[0].isVerified === 0) {
-                  return next(errorHandler(402, "You are not verified"));
+                  return next(errorHandler(402,{message: "You are not verified",isVerified: false}));
             }
-
-            // Use bcrypt.compare instead of compareSync
             bcrypt.compare(password, data[0].password, (err, result) => {
                   if (err) {
                         return next(errorHandler(500, err));
@@ -45,7 +43,7 @@ export const Login = (req, res, next) => {
                               httpOnly: true,
                         })
                               .status(200)
-                              .json({ details: others, isAdmin });
+                              .json({ data: others, isAdmin ,success: true });
                   } else {
                         return next(errorHandler(401, "Incorrect Password"));
                   }

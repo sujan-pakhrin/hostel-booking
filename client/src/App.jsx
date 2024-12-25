@@ -1,3 +1,4 @@
+import AuthOtp from "./components/auth/AuthOtp";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Navbar from "./components/global/Navbar";
@@ -29,6 +30,10 @@ function App() {
     {
       path: "/register",
       element: <Register />,
+    },
+    {
+      path: "/otp-verification",
+      element: <AuthOtp />,
     },
     {
       path: "/login",

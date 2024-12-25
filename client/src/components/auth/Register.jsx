@@ -1,40 +1,39 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
+        f_name: "",
+        l_name: "",
         email: "",
         password: "",
         confirmPassword: "",
-        address: "", 
+        address: "",
         phone: "",
         gender: "",
     });
-    console.log(formData)
+    console.log(formData);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (
-            !formData.firstName ||
-            !formData.lastName ||
-            !formData.email ||
-            !formData.password ||
-            !formData.confirmPassword ||
-            !formData.address ||
-            !formData.phone
-        ) {
-            alert("Please fill in all fields");
-            return;
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
-
-        alert(`Registration successful! Email: ${formData}`);
+        await axios
+            .post("http://localhost:8888/api/user", formData, {
+                headers: {
+                    "Content-Type": "application/json", // ensure content type matches what the API expects
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                navigate("/otp-verification", {
+                    state: { email: formData.email },
+                });
+            })
+            .catch((err) => {
+                console.log(err.response.data.message);
+            });
     };
 
     const handleChange = (e) => {
@@ -46,8 +45,8 @@ const Register = () => {
     };
 
     return (
-        <div className="flex flex-col gap-5 items-center justify-center min-h-screen">
-            <div className="flex flex-col gap-6 max-w-sm w-full px-8 py-7 rounded-lg shadow-lg shadow-gray-300 bg-white text-sm">
+        <div className="flex flex-col gap-5 items-center justify-center min-h-screen mx-4">
+            <div className="flex flex-col gap-6 max-w-sm md:max-w-md lg:max-w-lg w-full px-8 py-7 rounded-lg shadow-lg shadow-gray-300 bg-white text-sm">
                 <h1 className="text-purple-800 font-semibold text-3xl text-center">
                     Sign Up
                 </h1>
@@ -58,18 +57,22 @@ const Register = () => {
                         <div className="relative w-full">
                             <input
                                 type="text"
-                                name="firstName"
-                                value={formData.firstName}
+                                name="f_name"
+                                value={formData.f_name}
                                 onChange={handleChange}
-                                id="firstName"
+                                id="f_name"
                                 className="w-full outline-none border-2 border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:border-none focus:ring-purple-500 transition-all"
                             />
                             <label
-                                htmlFor="firstName"
+                                htmlFor="f_name"
                                 className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 transform origin-top-left bg-white px-1"
                                 style={{
-                                    transform: formData.firstName ? "translateY(-1.4rem)" : "translateY(0)",
-                                    fontSize: formData.firstName ? "0.75rem" : "0.9rem",
+                                    transform: formData.f_name
+                                        ? "translateY(-1.4rem)"
+                                        : "translateY(0)",
+                                    fontSize: formData.f_name
+                                        ? "0.75rem"
+                                        : "0.9rem",
                                 }}
                             >
                                 First Name
@@ -79,18 +82,22 @@ const Register = () => {
                         <div className="relative w-full">
                             <input
                                 type="text"
-                                name="lastName"
-                                value={formData.lastName}
+                                name="l_name"
+                                value={formData.l_name}
                                 onChange={handleChange}
-                                id="lastName"
+                                id="l_name"
                                 className="w-full outline-none border-2 border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:border-none focus:ring-purple-500 transition-all"
                             />
                             <label
-                                htmlFor="lastName"
+                                htmlFor="l_name"
                                 className="absolute left-4 text-gray-500 text-sm transition-all duration-200 transform origin-top-left top-3 bg-white px-1"
                                 style={{
-                                    transform: formData.lastName ? "translateY(-1.4rem)" : "translateY(0)",
-                                    fontSize: formData.lastName ? "0.75rem" : "0.9rem",
+                                    transform: formData.l_name
+                                        ? "translateY(-1.4rem)"
+                                        : "translateY(0)",
+                                    fontSize: formData.l_name
+                                        ? "0.75rem"
+                                        : "0.9rem",
                                 }}
                             >
                                 Last Name
@@ -101,7 +108,6 @@ const Register = () => {
                     {/* Email */}
                     <div className="relative">
                         <input
-                        
                             type="email"
                             name="email"
                             value={formData.email}
@@ -109,11 +115,13 @@ const Register = () => {
                             id="email"
                             className="w-full outline-none border-2 border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:border-none focus:ring-purple-500 transition-all"
                         />
-                        <label 
+                        <label
                             htmlFor="email"
                             className="absolute left-4 top-3 bg-white px-1 text-gray-500 text-sm transition-all duration-200 transform origin-top-left"
                             style={{
-                                transform: formData.email ? "translateY(-1.4rem)" : "translateY(0)",
+                                transform: formData.email
+                                    ? "translateY(-1.4rem)"
+                                    : "translateY(0)",
                                 fontSize: formData.email ? "0.75rem" : "0.9rem",
                             }}
                         >
@@ -135,8 +143,12 @@ const Register = () => {
                             htmlFor="address"
                             className="absolute left-4 top-3 bg-white px-1 text-gray-500 text-sm transition-all duration-200 transform origin-top-left"
                             style={{
-                                transform: formData.address ? "translateY(-1.4rem)" : "translateY(0)",
-                                fontSize: formData.address ? "0.75rem" : "0.9rem",
+                                transform: formData.address
+                                    ? "translateY(-1.4rem)"
+                                    : "translateY(0)",
+                                fontSize: formData.address
+                                    ? "0.75rem"
+                                    : "0.9rem",
                             }}
                         >
                             Address
@@ -157,7 +169,9 @@ const Register = () => {
                             htmlFor="phone"
                             className="absolute left-4 top-3 bg-white px-1 text-gray-500 text-sm transition-all duration-200 transform origin-top-left"
                             style={{
-                                transform: formData.phone ? "translateY(-1.4rem)" : "translateY(0)",
+                                transform: formData.phone
+                                    ? "translateY(-1.4rem)"
+                                    : "translateY(0)",
                                 fontSize: formData.phone ? "0.75rem" : "0.9rem",
                             }}
                         >
@@ -179,8 +193,12 @@ const Register = () => {
                             htmlFor="password"
                             className="absolute left-4 top-3 bg-white px-1 text-gray-500 text-sm transition-all duration-200 transform origin-top-left"
                             style={{
-                                transform: formData.password ? "translateY(-1.4rem)" : "translateY(0)",
-                                fontSize: formData.password ? "0.75rem" : "0.9rem",
+                                transform: formData.password
+                                    ? "translateY(-1.4rem)"
+                                    : "translateY(0)",
+                                fontSize: formData.password
+                                    ? "0.75rem"
+                                    : "0.9rem",
                             }}
                         >
                             Password
@@ -201,8 +219,12 @@ const Register = () => {
                             htmlFor="confirmPassword"
                             className="absolute left-4 top-3 bg-white px-1 text-gray-500 text-sm transition-all duration-200 transform origin-top-left"
                             style={{
-                                transform: formData.confirmPassword ? "translateY(-1.4rem)" : "translateY(0)",
-                                fontSize: formData.confirmPassword ? "0.75rem" : "0.9rem",
+                                transform: formData.confirmPassword
+                                    ? "translateY(-1.4rem)"
+                                    : "translateY(0)",
+                                fontSize: formData.confirmPassword
+                                    ? "0.75rem"
+                                    : "0.9rem",
                             }}
                         >
                             Confirm Password
@@ -222,7 +244,10 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-radio"
                             />
-                            <label htmlFor="male" className="text-sm text-gray-600">
+                            <label
+                                htmlFor="male"
+                                className="text-sm text-gray-600"
+                            >
                                 Male
                             </label>
                         </div>
@@ -236,7 +261,10 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-radio"
                             />
-                            <label htmlFor="female" className="text-sm text-gray-600">
+                            <label
+                                htmlFor="female"
+                                className="text-sm text-gray-600"
+                            >
                                 Female
                             </label>
                         </div>
@@ -250,7 +278,10 @@ const Register = () => {
                                 onChange={handleChange}
                                 className="form-radio"
                             />
-                            <label htmlFor="other" className="text-sm text-gray-600">
+                            <label
+                                htmlFor="other"
+                                className="text-sm text-gray-600"
+                            >
                                 Other
                             </label>
                         </div>
@@ -278,14 +309,12 @@ const Register = () => {
 
             <div className="flex gap-3 text-purple-700 items-center justify-center">
                 <span className="text-sm">Already have an account?</span>
+                <Link to={'/login'}>
                 <span className="font-semibold text-sm">Sign In</span>
+                </Link>
             </div>
         </div>
     );
 };
 
 export default Register;
-
-
-
-

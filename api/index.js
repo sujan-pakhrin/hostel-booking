@@ -30,7 +30,7 @@ app.use("/api", ratingRouter);
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500;
     const errorMessage = err.message || "Something went wrong!";
-    return res.status(errorStatus).json({
+    return res.status(errorStatus).send({
         success: 0,
         status: errorStatus,
         message: errorMessage,

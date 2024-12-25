@@ -20,20 +20,19 @@ export const getUser = (req, res, next) => {
     const id = parseInt(req.params.id);
     console.log(id);
     const sql = "select * from user where user_id=?";
-    
+
     db.query(sql, id, (err, data) => {
         if (err) {
-            return next(errorHandler(400, err));  
+            return next(errorHandler(400, err));
         }
 
         if (Array.isArray(data) && data.length > 0) {
             const { password, isAdmin, ...rest } = data[0];
-            return res.send(rest); 
+            return res.send(rest);
         }
         return res.status(404).send({ message: "User not found" });
     });
 };
-
 
 export const createUser = (req, res, next) => {
     // const profile = req.file.filename;
@@ -43,19 +42,28 @@ export const createUser = (req, res, next) => {
     const generateOTP = () => Math.floor(1000 + Math.random() * 9000);
     const otp = generateOTP();
 
+    if (!f_name || !l_name || !address || !email || !password || !gender) {
+        return next(errorHandler(400, "All fields are required!!"));
+    }
+    
+    if (f_name === "" || l_name === "" || address === "" || email === "" || password === "" || gender === "") {
+        return next(errorHandler(400, "Some fields are empty!!"));
+    }
+    
+
     const sql = "Select * from user where email=?";
     db.query(sql, [email], (err, data) => {
         if (err) {
             next(errorHandler(500, err));
         } else if (data.length > 0) {
-            next(errorHandler(400, "Email already exist!!", err));
+            next(errorHandler(409, "Email already exist!!", err));
         } else {
             const sql = "Select * from user where phone=?";
             db.query(sql, [phone], (err, data) => {
                 if (err) {
                     next(errorHandler(500, err));
                 } else if (data.length > 0) {
-                    next(errorHandler(400, "Phone already exist!!", err));
+                    next(errorHandler(409, "Phone already exist!!", err));
                 } else {
                     console.log(password);
                     bcrypt.hash(password, 10, (err, hash) => {
@@ -105,8 +113,11 @@ export const createUser = (req, res, next) => {
                                                 [otp, email],
                                                 (err, data) => {
                                                     if (err) {
-                                                        res.status(500).send(
-                                                            err
+                                                        next(
+                                                            errorHandler(
+                                                                500,
+                                                                err
+                                                            )
                                                         );
                                                     } else {
                                                         res.status(200).send({
@@ -119,7 +130,7 @@ export const createUser = (req, res, next) => {
                                             );
                                         })
                                         .catch((err) => {
-                                            res.status(500).send(err);
+                                            errorHandler(500, err);
                                         });
                                 }
                             });
@@ -202,6 +213,7 @@ export const verifyOtp = (req, res, next) => {
                 res.send({
                     message: "Email verified successfully",
                     data: updateResult,
+                    success:true
                 });
             });
         } else {
