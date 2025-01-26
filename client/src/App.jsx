@@ -3,6 +3,9 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Navbar from "./components/global/Navbar";
 import Hostels from "./components/hostel/Hostels";
+import ListPage from "./components/list/ListPage";
+import SinglePage from "./components/list/SinglePage";
+import Map from "./components/map/Map";
 import HomeMain from "./Pages/HomeMain";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
@@ -24,6 +27,14 @@ function App() {
         {
           path: "/",
           element: <HomeMain />,
+        },
+        {
+          path: "/list",
+          element: <ListPage />,
+        },
+        {
+          path: "/list/:id",
+          element: <SinglePage />,
         },
       ],
     },
