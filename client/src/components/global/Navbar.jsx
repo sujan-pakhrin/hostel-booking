@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import logo from '../../assets/public/svg/logo.svg';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -8,12 +9,14 @@ const Navbar = () => {
         <div className="flex justify-center h-[64px]  bg-white sticky top-0 text-[#272D37] lg:h-[86px] z-20">
             <nav className="flex justify-between items-center max-w-[343px] w-full md:max-w-[704px] lg:max-w-full relative">
                 <div className="flex items-center h-[32px] justify-between lg:w-full">
-                    <div className="flex gap-[64px]">
-                        <Link to="/">Hostel</Link>
+                    <div className="flex gap-[64px] items-center">
+                        {/* <Link to="/">Hostel</Link> */}
+                        <img src={logo} alt="" className="h-[100px]" />
                         <div className="hidden lg:flex items-center">
                             <ul className="flex gap-[32px] font-semibold text-[15px] leading-[22px]">
                                 <Link to="/">
                                     <li>Home</li>
+                                   
                                 </Link>
 
                                 <li>Our Products</li>
@@ -27,14 +30,17 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="hidden lg:flex items-center gap-2">
-                        <button className="px-6 py-3 font-semibold text-[15px] leading-[22px] text-primary rounded-sm">
-                            Sign Up
-                        </button>
-                        <button className="px-6 py-3 bg-primary font-semibold text-[15px] leading-[22px] text-white rounded-sm">
-                            Log In
-                        </button>
+                        <Link to={"/register"}>
+                            <button className="px-6 py-3 font-semibold text-[15px] leading-[22px] text-primary rounded-sm">
+                                Sign Up
+                            </button>
+                        </Link>
+                        <Link to={"/login"}>
+                            <button className="px-6 py-3 bg-primary font-semibold text-[15px] leading-[22px] text-white rounded-sm">
+                                Log In
+                            </button>
+                        </Link>
                     </div>
-                    
                 </div>
                 <div className="lg:hidden">
                     {open ? (
