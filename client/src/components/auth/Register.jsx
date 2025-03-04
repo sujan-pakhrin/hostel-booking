@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../../assets/logo/logo.png'
 
 const Register = () => {
     const navigate = useNavigate();
@@ -47,6 +48,10 @@ const Register = () => {
     return (
         <div className="flex flex-col gap-5 items-center justify-center min-h-screen mx-4">
             <div className="flex flex-col gap-6 max-w-sm md:max-w-md lg:max-w-lg w-full px-8 py-7 rounded-lg shadow-lg shadow-gray-300 bg-white text-sm">
+               
+               <div className="h-20 flex justify-center items-center">
+                <img src={logo} alt="" className="h-full"/>
+                </div> 
                 <h1 className="text-purple-800 font-semibold text-3xl text-center">
                     Sign Up
                 </h1>

@@ -11,14 +11,6 @@ const SinglePage = () => {
     const { id } = useParams();
     const hostel_id = parseInt(id);
 
-    console.log("Item ID from URL:", id);
-    // const productImages = [
-    //     "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/6e61b/MainAfter.avif",
-    //     "https://img.freepik.com/free-photo/view-chameleon-with-bright-neon-colors_23-2151682728.jpg?semt=ais_hybrid",
-    //     "https://img.freepik.com/free-photo/beautiful-chameleon-wild_23-2151731209.jpg?semt=ais_hybrid",
-    //     "https://img.freepik.com/free-photo/view-chameleon-with-bright-neon-colors_23-2151682750.jpg?semt=ais_hybrid",
-    // ];
-
     const [currentImage, setCurrentImage] = useState(singlePostData.images[0]);
 
     const handleThumbnailClick = (image) => {

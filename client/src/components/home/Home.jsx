@@ -1,6 +1,6 @@
 import React from "react";
 import { MdOutlineFreeCancellation } from "react-icons/md";
-import hostelImg from "../../assets/public/svg/hostel.svg";
+import hostelImg from "../../assets/logo/hostel.svg";
 
 const Home = () => {
     return (

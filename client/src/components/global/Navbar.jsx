@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import logo from '../../assets/public/svg/logo.svg';
+import logo from '../../assets/logo/logo.svg';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);

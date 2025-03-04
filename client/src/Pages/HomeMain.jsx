@@ -3,6 +3,7 @@ import Home from "../components/home/Home";
 import Popular from "../components/home/Popular";
 import RecentRooms from "../components/home/RecentRooms";
 
+
 const HomeMain = () => {
     return (
         <>

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../../assets/logo/logo.png'
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -54,6 +55,9 @@ const Login = () => {
     return (
         <div className="flex flex-col gap-5 items-center justify-center min-h-screen">
             <div className="flex flex-col gap-6 max-w-sm w-full px-8 py-10 rounded-lg shadow-lg shadow-gray-300 bg-white text-sm">
+            <div className="h-20 flex justify-center items-center">
+                <img src={logo} alt="" className="h-full"/>
+                </div> 
                 <h1 className="text-purple-800 font-semibold text-3xl text-center">
                     Sign In
                 </h1>
