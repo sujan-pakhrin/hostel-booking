@@ -45,7 +45,7 @@ export const listData = [
       },
       {
         id: 5,
-        title: "Apartment 5",
+        title: "Apartment hello",
         images: ["https://images.pexels.com/photos/276625/pexels-photo-276625.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"],
         bedroom: 3,
         bathroom: 2,
@@ -56,7 +56,7 @@ export const listData = [
       },
       {
         id: 6,
-        title: "Apartment 6",
+        title: "Apartment hi",
         images: ["https://images.pexels.com/photos/271816/pexels-photo-271816.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"],
         bedroom: 1,
         bathroom: 1,
@@ -78,7 +78,7 @@ export const listData = [
       },
       {
         id: 8,
-        title: "Apartment",
+        title: "Apartment  ",
         images: ["https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"],
         bedroom: 3,
         bathroom: 2,
